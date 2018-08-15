@@ -21,7 +21,7 @@
 
     <!-- Theme CSS -->
     <link href="css/grayscale.min.css" rel="stylesheet">
-
+    <link href="css/customcss.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -115,13 +115,17 @@
             <div class="col-lg-8 col-lg-offset-2">
                 <h2>Contact Guy Smiley</h2>
                 <p>Remember Guy Smiley?  Yeah, he wants to hear from you.</p>
-                <p class="bg-primary">
-                    [[ This is where you'd put your contact form.  Get it done! ]]
-                </p>
+                <form class="challenge-form" method="post" id="smileyForm">
+                  <input type="text" name="fullName" class="require col-xs-6" placeholder="Full Name*" required />
+                  <input type="email" name="contactEmail" class="require col-xs-6" placeholder="Email*" required />
+                  <input type="tel" name="phoneNumber" class="col-xs-12" placeholder="Phone Number(optional)" />
+                  <textarea name="smileyMessage" rows="5" cols="40" class="require clearfix col-xs-12" placeholder="Your Message Here*" required  maxlength="500"></textarea>
+                  <button id="submitBtn" name="Submit" class="btn btn-default btn-lg clearfix" >SUBMIT</button>
+                </form>
             </div>
         </div>
     </section>
-
+ 
     <!-- Map Section -->
     <div id="map"></div>
 
@@ -141,11 +145,64 @@
     <!-- Plugin JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
-    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
-
     <!-- Theme JavaScript -->
     <script src="js/grayscale.min.js"></script>
+     <script type="text/javascript">
+  $(function(){
+
+    var request;
+    $('#smileyForm').submit(function(e) {
+    e.preventDefault();
+    if(confirmRequired()) {
+ 
+      //prevent multiple submissions in quick succession 
+    // $('#submitBtn').prop("disabled",true).html('<span class="cssload-whirlpool"></span>');
+      if(request)
+        request.abort();
+      var $form = jQuery(this);
+      var formData = $form.serialize();
+      request = $.ajax({
+                  url: "vendor/MyProject/src/MyProject/FormController.php",
+                  type: "post",
+				  dataType: 'json',
+                  data:  formData,
+                  success: function(data) {
+                  	$('#submitBtn').html(data.message);
+                     
+                  }
+                   });
+                  }
+      });
+     
+      function confirmRequired() {
+      	var valid= true;
+            	$('.require').each(function() {
+            		
+            		if( !$(this).val()) {
+            			$(this).addClass('invalid');
+            			valid = false;
+            		} 
+            		else
+            			$(this).removeClass('invalid');
+            	});
+            	return valid;		
+      	}
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+    var elements = document.getElementsByTagName("INPUT");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].oninvalid = function(e) {
+            e.target.setCustomValidity("");
+            if (!e.target.validity.valid) {
+                e.target.setCustomValidity("This field cannot be left blank");
+            }
+        };
+        elements[i].oninput = function(e) {
+            e.target.setCustomValidity("");
+        };
+    }
+})
+  </script>
 
 </body>
 
