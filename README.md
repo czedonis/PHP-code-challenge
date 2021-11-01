@@ -1,6 +1,6 @@
-# Dealer Inspire PHP Code Challenge
+# PHP Code Challenge
 
-Welcome to the Dealer Inspire PHP Code challenge. 
+Welcome to the PHP Code challenge. 
 
 ## Getting Started
 
